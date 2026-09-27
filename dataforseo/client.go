@@ -261,7 +261,7 @@ func (c *Client) send(ctx context.Context, method, path string, body []byte) ([]
 			return nil, fmt.Errorf("dataforseo: %s: %w", path, err)
 		}
 		raw, readErr := io.ReadAll(io.LimitReader(resp.Body, maxResponseBytes))
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		if readErr != nil {
 			return nil, fmt.Errorf("dataforseo: read %s: %w", path, readErr)
 		}

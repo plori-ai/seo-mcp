@@ -1,0 +1,45 @@
+[
+  {
+    "se_type": "google",
+    "location_code": 2840,
+    "language_code": "en",
+    "total_count": 3,
+    "items_count": 3,
+    "items": [
+      {
+        "se_type": "google",
+        "keyword": "burr grinder",
+        "keyword_info": {
+          "search_volume": 1000,
+          "cpc": 1.5,
+          "competition": 0.5,
+          "competition_level": "MEDIUM",
+          "monthly_searches": []
+        },
+        "keyword_properties": {"keyword_difficulty": null},
+        "search_intent_info": {"main_intent": null}
+      },
+      {
+        "se_type": "google",
+        "keyword": "coffee grinder",
+        "keyword_info": {
+          "search_volume": 5000,
+          "cpc": 1.2,
+          "competition": 0.8,
+          "competition_level": "HIGH",
+          "monthly_searches": [
+            {"year": 2026, "month": 8, "search_volume": 5200},
+            {"year": 2026, "month": 7, "search_volume": 4800}
+          ]
+        },
+        "keyword_properties": {"keyword_difficulty": 42},
+        "search_intent_info": {"main_intent": "commercial"}
+      },
+      {
+        "se_type": "google",
+        "keyword": null,
+        "keyword_info": {"search_volume": 7}
+      }
+    ]
+  }
+]

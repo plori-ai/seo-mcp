@@ -1,0 +1,104 @@
+[
+  {
+    "se_type": "google",
+    "seed_keyword": "coffee grinder",
+    "location_code": 2840,
+    "language_code": "en",
+    "total_count": 9,
+    "items_count": 9,
+    "items": [
+      {
+        "se_type": "google",
+        "depth": 0,
+        "keyword_data": {
+          "keyword": "coffee grinder",
+          "keyword_info": {
+            "search_volume": 5000,
+            "cpc": 1.2,
+            "competition": 0.8,
+            "competition_level": "HIGH",
+            "monthly_searches": [
+              {"year": 2026, "month": 8, "search_volume": 5200},
+              {"year": 2026, "month": 7, "search_volume": 4800}
+            ]
+          },
+          "keyword_properties": {"keyword_difficulty": 42},
+          "search_intent_info": {"main_intent": "commercial", "foreign_intent": null}
+        }
+      },
+      {
+        "depth": 1,
+        "keyword_data": {
+          "keyword": "Burr Grinder",
+          "keyword_info": {
+            "search_volume": 1000,
+            "cpc": null,
+            "competition": 0.5,
+            "monthly_searches": [{"year": 2026, "month": 8, "search_volume": 1100}]
+          },
+          "keyword_info_normalized_with_clickstream": {
+            "search_volume": 900,
+            "monthly_searches": [{"year": 2026, "month": 8, "search_volume": 950}]
+          },
+          "keyword_properties": {"keyword_difficulty": null},
+          "search_intent_info": {"main_intent": "transactional"}
+        }
+      },
+      {
+        "depth": 1,
+        "keyword_data": {
+          "keyword": "burr grinder ",
+          "keyword_info": {"search_volume": 1, "cpc": 9.9, "competition": 0.9},
+          "keyword_properties": {"keyword_difficulty": 99},
+          "search_intent_info": {"main_intent": "commercial"}
+        }
+      },
+      {
+        "depth": 1,
+        "keyword_data": {
+          "keyword": "manual coffee grinder",
+          "keyword_info": {"search_volume": 300, "cpc": 0.9, "competition": 0.3, "monthly_searches": []},
+          "keyword_info_normalized_with_clickstream": {
+            "search_volume": 0,
+            "monthly_searches": [{"year": 2026, "month": 8, "search_volume": 0}]
+          },
+          "search_intent_info": {"main_intent": "informational"}
+        }
+      },
+      {
+        "depth": 2,
+        "keyword_data": {
+          "keyword": "coffee grinder reviews",
+          "keyword_info": null,
+          "keyword_properties": null,
+          "search_intent_info": null
+        }
+      },
+      {
+        "depth": 2,
+        "keyword_data": {
+          "keyword": "best coffee grinder",
+          "keyword_info": {
+            "search_volume": 200,
+            "cpc": 2.5,
+            "competition": 0.6,
+            "monthly_searches": [{"year": 2026, "month": 8, "search_volume": null}]
+          },
+          "keyword_properties": {"keyword_difficulty": 30},
+          "search_intent_info": {"main_intent": "navigational"}
+        }
+      },
+      {
+        "depth": 3,
+        "keyword_data": {
+          "keyword": "espresso grinder",
+          "keyword_info": {"search_volume": 150, "cpc": 0.4, "competition": 0.2, "monthly_searches": null},
+          "keyword_properties": {"keyword_difficulty": 25},
+          "search_intent_info": {"main_intent": "COMMERCIAL"}
+        }
+      },
+      {"depth": 3, "keyword_data": null},
+      {"depth": 3, "keyword_data": {"keyword": "", "keyword_info": {"search_volume": 10}}}
+    ]
+  }
+]

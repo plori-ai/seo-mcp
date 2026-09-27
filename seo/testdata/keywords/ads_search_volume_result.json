@@ -1,0 +1,24 @@
+[
+  {
+    "keyword": "kaffivél",
+    "spell": null,
+    "location_code": 2352,
+    "language_code": "is",
+    "search_partners": false,
+    "competition": "HIGH",
+    "competition_index": 87,
+    "search_volume": 480,
+    "low_top_of_page_bid": 0.2,
+    "high_top_of_page_bid": 0.9,
+    "cpc": 0.55,
+    "monthly_searches": [{"year": 2026, "month": 8, "search_volume": 500}]
+  },
+  {
+    "keyword": "kaffikvörn",
+    "competition": null,
+    "competition_index": null,
+    "search_volume": null,
+    "cpc": null,
+    "monthly_searches": null
+  }
+]

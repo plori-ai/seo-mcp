@@ -1,0 +1,27 @@
+{
+  "keywords": [
+    {
+      "keyword": "coffee grinder",
+      "search_volume": 5000,
+      "keyword_difficulty": 42,
+      "main_intent": "commercial",
+      "cpc": 1.2,
+      "competition": 0.8,
+      "competition_level": "HIGH",
+      "monthly_searches": [
+        {"year": 2026, "month": 8, "search_volume": 5200},
+        {"year": 2026, "month": 7, "search_volume": 4800}
+      ]
+    },
+    {
+      "keyword": "burr grinder",
+      "search_volume": 1000,
+      "keyword_difficulty": null,
+      "main_intent": null,
+      "cpc": 1.5,
+      "competition": 0.5,
+      "competition_level": "MEDIUM",
+      "monthly_searches": null
+    }
+  ]
+}

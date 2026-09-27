@@ -1,0 +1,70 @@
+{
+  "results": [
+    {
+      "seed": " Coffee Grinder ",
+      "ok": true,
+      "rowCount": 6,
+      "source": "related",
+      "usedFallback": false,
+      "rows": [
+        {
+          "keyword": "coffee grinder",
+          "searchVolume": 5000,
+          "trend": [
+            {"year": 2026, "month": 8, "searchVolume": 5200},
+            {"year": 2026, "month": 7, "searchVolume": 4800}
+          ],
+          "cpc": 1.2,
+          "competition": 0.8,
+          "keywordDifficulty": 42,
+          "intent": "commercial"
+        },
+        {
+          "keyword": "burr grinder",
+          "searchVolume": 900,
+          "trend": [{"year": 2026, "month": 8, "searchVolume": 950}],
+          "cpc": null,
+          "competition": 0.5,
+          "keywordDifficulty": null,
+          "intent": "transactional"
+        },
+        {
+          "keyword": "manual coffee grinder",
+          "searchVolume": 300,
+          "trend": [],
+          "cpc": 0.9,
+          "competition": 0.3,
+          "keywordDifficulty": null,
+          "intent": "informational"
+        },
+        {
+          "keyword": "coffee grinder reviews",
+          "searchVolume": null,
+          "trend": [],
+          "cpc": null,
+          "competition": null,
+          "keywordDifficulty": null,
+          "intent": "unknown"
+        },
+        {
+          "keyword": "best coffee grinder",
+          "searchVolume": 200,
+          "trend": [{"year": 2026, "month": 8, "searchVolume": 0}],
+          "cpc": 2.5,
+          "competition": 0.6,
+          "keywordDifficulty": 30,
+          "intent": "navigational"
+        },
+        {
+          "keyword": "espresso grinder",
+          "searchVolume": 150,
+          "trend": [],
+          "cpc": 0.4,
+          "competition": 0.2,
+          "keywordDifficulty": 25,
+          "intent": "commercial"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "keywords": [
+    {
+      "keyword": "kaffivél",
+      "search_volume": 480,
+      "keyword_difficulty": null,
+      "main_intent": null,
+      "cpc": 0.55,
+      "competition": 0.87,
+      "competition_level": "HIGH",
+      "monthly_searches": [{"year": 2026, "month": 8, "search_volume": 500}]
+    },
+    {
+      "keyword": "kaffikvörn",
+      "search_volume": null,
+      "keyword_difficulty": null,
+      "main_intent": null,
+      "cpc": null,
+      "competition": null,
+      "competition_level": null,
+      "monthly_searches": null
+    }
+  ]
+}
