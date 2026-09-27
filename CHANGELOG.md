@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Ver
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-27
+
 ### Added
 
 - Two MCP tools that use DataForSEO task queues, ported from OpenSEO with the same tool names, argument names, and result field names:
@@ -48,6 +50,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Ver
 - Tests with synthetic DataForSEO responses, MCP transport tests, and library examples.
 - CI on Go 1.25 and Go 1.26, and GoReleaser archives for Linux, macOS, and Windows with SHA-256 checksums.
 
-[Unreleased]: https://github.com/plori-ai/seo-mcp/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/plori-ai/seo-mcp/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/plori-ai/seo-mcp/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/plori-ai/seo-mcp/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/plori-ai/seo-mcp/releases/tag/v0.1.0
