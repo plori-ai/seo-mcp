@@ -1,0 +1,15 @@
+{
+  "grid":[
+    {"row":0,"col":0,"latitude":40.0180874,"longitude":-74.0234532,"rank":2,"resultsCount":2,"topResult":{"title":"Other Cafe","cid":"999"}},
+    {"row":0,"col":1,"latitude":40.0180874,"longitude":-74,"rank":3,"resultsCount":1,"topResult":{"title":"Acme Cafe","cid":"123"}},
+    {"row":0,"col":2,"latitude":40.0180874,"longitude":-73.9765468,"rank":11,"resultsCount":1,"topResult":{"title":"Acme Cafe","cid":"123"}},
+    {"row":1,"col":0,"latitude":40,"longitude":-74.0234532,"rank":null,"resultsCount":0,"topResult":null},
+    {"row":1,"col":1,"latitude":40,"longitude":-74,"rank":null,"resultsCount":1,"topResult":{"title":"Other Cafe","cid":"999"}},
+    {"row":1,"col":2,"latitude":40,"longitude":-73.9765468,"rank":null,"error":true},
+    {"row":2,"col":0,"latitude":39.9819126,"longitude":-74.0234532,"rank":null,"resultsCount":1,"topResult":{"title":"Acme Cafe","cid":"123"}},
+    {"row":2,"col":1,"latitude":39.9819126,"longitude":-74,"rank":null,"resultsCount":1,"topResult":{"title":"Acme Cafe","cid":"123"}},
+    {"row":2,"col":2,"latitude":39.9819126,"longitude":-73.9765468,"rank":1,"resultsCount":1,"topResult":{"title":"Acme Cafe","cid":"123"}}
+  ],
+  "summary":{"pointsSearched":9,"pointsFound":4,"averageRank":4.25,"top3Count":3,"top10Count":3},
+  "matchedBusiness":{"title":"Acme Cafe","cid":"123","placeId":"p1"}
+}

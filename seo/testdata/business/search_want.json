@@ -1,0 +1,24 @@
+{
+  "businesses": [
+    {
+      "title": "Example Cafe",
+      "description": "Breakfast and coffee",
+      "category": "cafe",
+      "additional_categories": ["bakery"],
+      "address": "10 Example Street",
+      "phone": "+1-555-0100",
+      "url": "https://cafe.example/",
+      "domain": "cafe.example",
+      "rating": {"value": 4.7, "votes_count": 123, "rating_type": "Max5"},
+      "is_claimed": false,
+      "cid": "9007199254740993",
+      "place_id": "example-place",
+      "latitude": 33.1,
+      "longitude": -84.9,
+      "total_photos": 42,
+      "check_url": "https://maps.example/cafe"
+    },
+    {"title": "Unrated Cafe", "rating": null, "phone": null, "is_claimed": true, "total_photos": 0},
+    {}
+  ]
+}

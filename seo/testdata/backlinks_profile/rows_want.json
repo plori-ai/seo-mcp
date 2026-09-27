@@ -1,0 +1,12 @@
+[
+  {
+    "domainFrom":"source.example","urlFrom":"https://source.example/article","urlTo":"https://example.com/blog",
+    "anchor":"Example","itemType":"anchor","isDofollow":true,"relAttributes":["ugc"],
+    "rank":25,"domainFromRank":60,"pageFromRank":30,"spamScore":0,
+    "firstSeen":"2026-01-01 00:00:00 +00:00","lastSeen":"2026-08-01 00:00:00 +00:00","isLost":false,"isBroken":true,"linksCount":2
+  },
+  {"domainFrom":null,"urlFrom":null,"urlTo":null,"anchor":null,"itemType":null,"isDofollow":false,"relAttributes":["nofollow"],"rank":null,"domainFromRank":null,"pageFromRank":null,"spamScore":12,"firstSeen":null,"lastSeen":"lost","isLost":true,"isBroken":false,"linksCount":null},
+  {"domainFrom":null,"urlFrom":null,"urlTo":null,"anchor":null,"itemType":null,"isDofollow":null,"relAttributes":[],"rank":null,"domainFromRank":null,"pageFromRank":null,"spamScore":7,"firstSeen":null,"lastSeen":"visited","isLost":true,"isBroken":false,"linksCount":null},
+  {"domainFrom":null,"urlFrom":null,"urlTo":null,"anchor":null,"itemType":null,"isDofollow":null,"relAttributes":[],"rank":null,"domainFromRank":null,"pageFromRank":null,"spamScore":null,"firstSeen":null,"lastSeen":"","isLost":false,"isBroken":false,"linksCount":null},
+  {"domainFrom":null,"urlFrom":null,"urlTo":null,"anchor":null,"itemType":null,"isDofollow":null,"relAttributes":[],"rank":null,"domainFromRank":null,"pageFromRank":null,"spamScore":null,"firstSeen":null,"lastSeen":null,"isLost":false,"isBroken":false,"linksCount":null}
+]

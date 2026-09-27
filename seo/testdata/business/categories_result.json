@@ -1,0 +1,16 @@
+[
+  {"category_name": "plumbing_supply_store", "business_count": 40},
+  {"category_name": "missing_count"},
+  {"category_name": "Cafe", "business_count": 120},
+  {"category_name": "PLUMBER", "business_count": 90, "ignored": true},
+  {"category_name": "equal_count", "business_count": 90},
+  {"category_name": "null_count", "business_count": null},
+  {"category_name": "zero_count", "business_count": 0},
+  {"category_name": "bad_count", "business_count": "1000"},
+  {"category_name": null, "business_count": 1000},
+  {"category_name": 23, "business_count": 1000},
+  {"business_count": 1000},
+  {"items": [{"category_name": "nested_is_not_a_category"}]},
+  null,
+  42
+]

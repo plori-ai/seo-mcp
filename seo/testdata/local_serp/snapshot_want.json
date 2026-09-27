@@ -1,0 +1,29 @@
+{
+  "results": [
+    {
+      "rank_group": 1,
+      "rank_absolute": 2,
+      "title": "Acme Cafe",
+      "domain": "cafe.example",
+      "url": "https://cafe.example/",
+      "contact_url": null,
+      "address": "1 Example Street",
+      "address_info": {"city": "Example City", "zip": "00000"},
+      "phone": "+1-555-0100",
+      "category": "Cafe",
+      "additional_categories": ["Coffee shop"],
+      "rating": {"value": 4.5, "votes_count": 12, "rating_max": 5},
+      "rating_distribution": {"5": 8, "4": 4},
+      "price_level": "moderate",
+      "is_claimed": true,
+      "cid": "12345678901234567890",
+      "place_id": "synthetic-place",
+      "latitude": 40,
+      "longitude": -74,
+      "total_photos": 15,
+      "work_hours": {"timetable": {"monday": [{"open": "08:00", "close": "17:00"}]}},
+      "local_justifications": [{"type": "review", "text": "Coffee and pastries"}]
+    },
+    {"title": null, "rating": null, "rank_group": 2}
+  ]
+}

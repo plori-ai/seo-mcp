@@ -1,0 +1,14 @@
+[
+  {
+    "items": [
+      {"domain":"EXAMPLE.com","visibility":100},
+      {"domain":"www.example.com","visibility":90},
+      {"domain":"Sub.Example.COM","visibility":80},
+      {"domain":"notexample.com","visibility":70},
+      {"domain":"example.com.evil.net","visibility":60},
+      {"domain":"second.net","visibility":50},
+      {"visibility":10,"provider_extra":"missing domain"},
+      {"domain":42,"visibility":5}
+    ]
+  }
+]

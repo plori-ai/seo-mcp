@@ -1,0 +1,37 @@
+[
+  {
+    "items": [
+      {
+        "rank_absolute": 1,
+        "question_id": "q1",
+        "question_text": "Do you serve breakfast?",
+        "original_question_text": null,
+        "profile_name": "Alex",
+        "time_ago": "a month ago",
+        "timestamp": "2026-08-20 12:00:00 +00:00",
+        "profile_url": "https://maps.example/author",
+        "url": "https://maps.example/long-question-url",
+        "items": [
+          {
+            "answer_id": "a1",
+            "answer_text": "Yes, until 11.",
+            "original_answer_text": "Yes, until 11.",
+            "profile_name": "Owner",
+            "time_ago": "a month ago",
+            "timestamp": "2026-08-21 12:00:00 +00:00",
+            "profile_image_url": "https://images.example/avatar",
+            "votes_count": 3
+          }
+        ]
+      },
+      {"question_id": "q2", "question_text": "Is there parking?", "items": []}
+    ],
+    "items_without_answers": [{"question_id": "q3", "question_text": "Do you have Wi-Fi?"}]
+  },
+  {"items": null, "items_without_answers": [{"question_id": "q4", "question_text": "Can I bring a dog?", "items": "not an array"}]},
+  {"items": [{"question_id": "discarded"}], "items_without_answers": [null]},
+  {"items": [7], "items_without_answers": [{"question_id": "also discarded"}]},
+  {"items": "invalid"},
+  null,
+  {"items": [{"question_id": "q5", "items": [null, 5, {"answer_text": "Kept", "ignored": true}]}]}
+]

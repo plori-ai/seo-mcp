@@ -1,0 +1,12 @@
+[
+  {
+    "items": [
+      {"domain":"a.example","visibility":2,"etv":30,"avg_position":8,"keywords_count":5,"median_position":7,"provider_extra":{"values":[true,null,1]}},
+      {"domain":"b.example","visibility":10,"etv":20,"avg_position":2,"keywords_count":8},
+      {"domain":"c.example","visibility":10,"etv":40,"avg_position":5,"keywords_count":2},
+      {"domain":"missing.example"},
+      {"domain":"string.example","visibility":"100","etv":"100","avg_position":"100","keywords_count":"100"},
+      {"domain":"null.example","visibility":null,"etv":null,"avg_position":null,"keywords_count":null}
+    ]
+  }
+]

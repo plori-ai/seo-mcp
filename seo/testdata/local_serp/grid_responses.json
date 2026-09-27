@@ -1,0 +1,11 @@
+[
+  {"coordinate":"40.0180874,-74.0234532,13z","status":20000,"result":[{"items":[{"title":"Other Cafe","cid":"999","rank_absolute":1},{"title":"Acme Cafe","cid":"123","place_id":"p1","rank_absolute":2,"rank_group":1}]}]},
+  {"coordinate":"40.0180874,-74,13z","status":20000,"result":[{"items":[{"title":"Acme Cafe","cid":"123","place_id":"p1","rank_absolute":null,"rank_group":3}]}]},
+  {"coordinate":"40.0180874,-73.9765468,13z","status":20000,"result":[{"items":[{"title":"Acme Cafe","cid":"123","place_id":"p1","rank_absolute":11}]}]},
+  {"coordinate":"40,-74.0234532,13z","status":40501,"message":"No Search Results.","result":null},
+  {"coordinate":"40,-74,13z","status":20000,"result":[{"items":[{"title":"Other Cafe","cid":"999","rank_absolute":1}]}]},
+  {"coordinate":"40,-73.9765468,13z","status":50000,"message":"Internal Error.","result":null},
+  {"coordinate":"39.9819126,-74.0234532,13z","status":20000,"result":[{"items":[{"title":"Acme Cafe","cid":"123","place_id":"p1"}]}]},
+  {"coordinate":"39.9819126,-74,13z","status":20000,"result":[{"items":[{"title":"Acme Cafe","cid":"123","place_id":"p1","rank_absolute":"1","rank_group":2}]}]},
+  {"coordinate":"39.9819126,-73.9765468,13z","status":20000,"result":[{"items":[{"title":"Acme Cafe","cid":"123","place_id":"p1","rank_group":1}]}]}
+]

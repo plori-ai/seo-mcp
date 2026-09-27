@@ -1,0 +1,18 @@
+[
+  {
+    "total_count": 12,
+    "items": [
+      {
+        "domain_from":"source.example","url_from":"https://source.example/article","url_to":"https://example.com/blog",
+        "anchor":"Example","item_type":"anchor","dofollow":true,"rel_attributes":["ugc"],"attributes":["ignored"],
+        "rank":25,"domain_from_rank":60,"page_from_rank":30,"backlink_spam_score":0,"backlinks_spam_score":70,
+        "first_seen":"2026-01-01 00:00:00 +00:00","last_visited":"2026-09-01 00:00:00 +00:00","lost_date":"2026-08-01 00:00:00 +00:00",
+        "is_lost":false,"is_broken":true,"links_count":2,"provider_extra":123
+      },
+      {"attributes":["nofollow"],"backlinks_spam_score":12,"last_visited":"visited","lost_date":"lost","dofollow":false},
+      {"rel_attributes":[],"attributes":["ignored"],"backlink_spam_score":null,"backlinks_spam_score":7,"lost_date":null,"last_visited":"visited","is_lost":true},
+      {"rel_attributes":null,"attributes":null,"backlink_spam_score":null,"backlinks_spam_score":null,"lost_date":"","last_visited":"ignored","is_broken":null},
+      {}
+    ]
+  }
+]

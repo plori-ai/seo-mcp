@@ -45,4 +45,12 @@ func ExampleTools() {
 	// get_ranked_keywords Get ranked keywords
 	// get_domain_overview Get domain overview
 	// get_backlinks_overview Get backlinks overview
+	// find_serp_competitors Find SERP competitors
+	// get_backlinks_profile Get backlinks profile
+	// search_local_businesses Search local businesses
+	// list_business_categories List business categories
+	// get_business_profile Get business profile
+	// get_google_business_questions Get Google business questions
+	// get_local_serp_results Get local SERP results
+	// get_local_rank_grid Get local rank grid
 }

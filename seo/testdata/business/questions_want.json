@@ -1,0 +1,18 @@
+{
+  "questions": [
+    {
+      "rank_absolute": 1,
+      "question_id": "q1",
+      "question_text": "Do you serve breakfast?",
+      "original_question_text": null,
+      "profile_name": "Alex",
+      "time_ago": "a month ago",
+      "timestamp": "2026-08-20 12:00:00 +00:00",
+      "items": [{"answer_id": "a1", "answer_text": "Yes, until 11.", "original_answer_text": "Yes, until 11.", "profile_name": "Owner", "time_ago": "a month ago", "timestamp": "2026-08-21 12:00:00 +00:00"}]
+    },
+    {"question_id": "q2", "question_text": "Is there parking?", "items": []},
+    {"question_id": "q3", "question_text": "Do you have Wi-Fi?", "items": null},
+    {"question_id": "q4", "question_text": "Can I bring a dog?", "items": null},
+    {"question_id": "q5", "items": [{}, {}, {"answer_text": "Kept"}]}
+  ]
+}

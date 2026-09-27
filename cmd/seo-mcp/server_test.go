@@ -76,8 +76,8 @@ func TestMCPListAndCall(t *testing.T) {
 		t.Fatal(err)
 	}
 	definitions := toolset.Tools()
-	if len(listed.Tools) != 5 || len(listed.Tools) != len(definitions) {
-		t.Fatalf("listed %d tools, want all five", len(listed.Tools))
+	if len(listed.Tools) != len(definitions) {
+		t.Fatalf("listed %d tools, want all %d", len(listed.Tools), len(definitions))
 	}
 	byName := make(map[string]*mcp.Tool)
 	for _, tool := range listed.Tools {

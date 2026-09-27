@@ -1,0 +1,27 @@
+[
+  {
+    "check_url": "https://maps.example/verified",
+    "items": [
+      {
+        "title": "Example Cafe",
+        "category": "Cafe",
+        "additional_categories": ["Bakery"],
+        "rating": {"value": 4.7, "votes_count": 123},
+        "rating_distribution": {"5": 100, "4": 20, "3": 3, "2": 0, "1": 0},
+        "address": "10 Example Street",
+        "phone": null,
+        "url": "https://cafe.example/",
+        "domain": "cafe.example",
+        "is_claimed": true,
+        "work_time": {"work_hours": {"current_status": "open", "timetable": {"monday": [{"open": {"hour": 8, "minute": 0}, "close": {"hour": 17, "minute": 30}}]}}},
+        "total_photos": 42,
+        "cid": 9007199254740993,
+        "place_id": "example-place",
+        "check_url": null,
+        "provider_extra": {"preserved": true}
+      },
+      {"title": "Ignored second profile"}
+    ]
+  },
+  {"items": [{"title": "Ignored second result"}]}
+]
