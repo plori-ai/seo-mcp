@@ -94,3 +94,25 @@ func TestLocationTable(t *testing.T) {
 		t.Errorf("default location %d is not in the table", DefaultLocationCode)
 	}
 }
+
+func TestMarketValidate(t *testing.T) {
+	for _, tt := range []struct {
+		market Market
+		ok     bool
+	}{
+		{Market{LocationCode: 2840, LanguageCode: "en"}, true},
+		{Market{LocationCode: 2276, LanguageCode: "de"}, true},
+		{Market{LocationCode: 2276}, false},
+		{Market{LocationCode: 1, LanguageCode: "en"}, false},
+		{Market{LocationCode: 2840, LanguageCode: "xx"}, false},
+	} {
+		err := tt.market.Validate()
+		var inputErr *InputError
+		if tt.ok && err != nil {
+			t.Errorf("Validate(%+v) = %v, want nil", tt.market, err)
+		}
+		if !tt.ok && !errors.As(err, &inputErr) {
+			t.Errorf("Validate(%+v) = %v, want *InputError", tt.market, err)
+		}
+	}
+}

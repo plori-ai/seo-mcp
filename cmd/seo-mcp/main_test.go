@@ -77,3 +77,22 @@ func TestRunStartup(t *testing.T) {
 		})
 	}
 }
+
+func TestRunRejectsUnsupportedDefaultMarket(t *testing.T) {
+	getenv := func(name string) string {
+		if name == "DATAFORSEO_API_KEY" {
+			return "dGVzdDp0ZXN0"
+		}
+		return ""
+	}
+	for _, args := range [][]string{
+		{"-location-code", "1"},
+		{"-location-code", "2840", "-language-code", "xx"},
+	} {
+		var stdout, stderr bytes.Buffer
+		err := run(context.Background(), args, getenv, &stdout, &stderr)
+		if err == nil || !strings.Contains(err.Error(), "invalid default market") {
+			t.Fatalf("run(%v) error = %v, want an invalid default market error", args, err)
+		}
+	}
+}

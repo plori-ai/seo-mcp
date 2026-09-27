@@ -12,7 +12,7 @@ import (
 )
 
 func newServer(set *toolset.Set) *mcp.Server {
-	server := mcp.NewServer(&mcp.Implementation{Name: "seo-mcp", Version: version}, nil)
+	server := mcp.NewServer(&mcp.Implementation{Name: "seo-mcp", Version: buildVersion()}, nil)
 	for _, definition := range toolset.Tools() {
 		openWorld := true
 		server.AddTool(&mcp.Tool{

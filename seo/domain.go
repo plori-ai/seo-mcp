@@ -79,7 +79,7 @@ func (c *Client) RankedKeywords(ctx context.Context, req RankedKeywordsRequest) 
 		return nil, err
 	}
 	if adsOnlyLocation(market.LocationCode) {
-		return nil, inputErrorf("Domain analytics is not available for this country. Keyword research and rank tracking work; domain-level data is limited to DataForSEO Labs locations.")
+		return nil, inputErrorf("Domain analytics is not available for this country: DataForSEO Labs does not cover it. Keyword research still works for this country.")
 	}
 	clauses, count := rankedScopeClauses(target)
 	if req.MinSearchVolume != nil {
@@ -231,7 +231,7 @@ func (c *Client) DomainOverview(ctx context.Context, req DomainOverviewRequest) 
 		return nil, err
 	}
 	if adsOnlyLocation(market.LocationCode) {
-		return nil, inputErrorf("Domain analytics is not available for this country. Keyword research and rank tracking work; domain-level data is limited to DataForSEO Labs locations.")
+		return nil, inputErrorf("Domain analytics is not available for this country: DataForSEO Labs does not cover it. Keyword research still works for this country.")
 	}
 	scope := req.Scope
 	if scope == "" && req.IncludeSubdomains != nil {
