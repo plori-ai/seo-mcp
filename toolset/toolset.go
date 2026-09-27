@@ -33,6 +33,14 @@ var tools = []Tool{
 	rankedKeywordsTool,
 	domainOverviewTool,
 	backlinksOverviewTool,
+	findSerpCompetitorsTool,
+	backlinksProfileTool,
+	searchLocalBusinessesTool,
+	listBusinessCategoriesTool,
+	businessProfileTool,
+	businessQuestionsTool,
+	localSerpResultsTool,
+	localRankGridTool,
 }
 
 // Tools returns the tool descriptions in a stable order.
