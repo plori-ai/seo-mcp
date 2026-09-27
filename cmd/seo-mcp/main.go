@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"strings"
 	"syscall"
 
@@ -18,7 +19,20 @@ import (
 	"github.com/plori-ai/seo-mcp/toolset"
 )
 
+// version is set by the release build (-ldflags "-X main.version=...").
 var version = "dev"
+
+// buildVersion returns the release version, or the module version recorded by
+// `go install module@version` when the binary was not built by a release.
+func buildVersion() string {
+	if version != "dev" {
+		return version
+	}
+	if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" && info.Main.Version != "(devel)" {
+		return info.Main.Version
+	}
+	return version
+}
 
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
@@ -46,17 +60,18 @@ func run(ctx context.Context, args []string, getenv func(string) string, stdout,
 		return errors.New("unexpected positional arguments; use -help for usage")
 	}
 	if *showVersion {
-		_, err := fmt.Fprintln(stdout, version)
+		_, err := fmt.Fprintln(stdout, buildVersion())
 		return err
 	}
 	api, err := clientFromEnv(getenv)
 	if err != nil {
 		return err
 	}
-	client := seo.New(api, seo.WithDefaultMarket(seo.Market{
-		LocationCode: *locationCode,
-		LanguageCode: *languageCode,
-	}))
+	market := seo.Market{LocationCode: *locationCode, LanguageCode: *languageCode}
+	if err := market.Validate(); err != nil {
+		return fmt.Errorf("invalid default market: %w", err)
+	}
+	client := seo.New(api, seo.WithDefaultMarket(market))
 	server := newServer(toolset.New(client))
 	if *httpAddr == "" {
 		err := server.Run(ctx, &mcp.StdioTransport{})

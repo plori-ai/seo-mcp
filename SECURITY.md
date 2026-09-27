@@ -1,21 +1,23 @@
 # Security policy
 
-## Reporting a vulnerability
+## Report a vulnerability
 
-Report vulnerabilities privately through [GitHub's security advisory form](https://github.com/plori-ai/seo-mcp/security/advisories/new). Include the affected version, reproduction steps using synthetic data, and the impact. Do not put credentials, tokens, or live provider responses in the report. Do not open a public issue with exploit details before a fix is available.
+Report vulnerabilities privately with the [GitHub security advisory form](https://github.com/plori-ai/seo-mcp/security/advisories/new). Include the affected version, the steps to reproduce the problem with synthetic data, and the impact. Do not put credentials, tokens, or live provider responses in the report. Do not open a public issue with exploit details before a fix is available.
 
-Security fixes target the latest release. Earlier releases may require an upgrade. Until the first release, fixes target the `main` branch.
+We release security fixes for the latest version only. To get a fix, upgrade to the latest release.
 
 ## Credentials and paid requests
 
-DataForSEO credentials belong in the server's environment or in the embedding application's secret configuration. `DATAFORSEO_API_KEY` is base64-encoded authentication data, not encrypted data. Protect it as you would the login and password. The server does not log credentials.
+Keep the DataForSEO credentials in the environment of the server, or in the secret configuration of the application that embeds the library. `DATAFORSEO_API_KEY` is base64-encoded, not encrypted. Protect it as you protect the login and password. The server does not log credentials.
 
-Every caller uses the operator's DataForSEO account. Read-only MCP annotations describe research behavior; they do not prevent charges. The server does not implement per-user permissions, usage quotas, or spending limits.
+All callers use the DataForSEO account of the operator. The read-only MCP annotations describe what the tools do. They do not prevent charges. The server has no per-user permissions, no usage quotas, and no spending limits.
 
 ## HTTP access
 
-Prefer stdio for a local MCP client. HTTP mode serves `/mcp` and requires `SEO_MCP_TOKEN` for non-loopback listeners. When a token is configured, every HTTP request must carry its bearer authorization header. Loopback listeners without a token are accessible to other processes on the same host.
+For a local MCP client, use stdio if you can. HTTP mode serves `/mcp` and needs `SEO_MCP_TOKEN` for a non-loopback address. If you set a token, each HTTP request must have the matching bearer `Authorization` header. A loopback listener without a token accepts requests from all processes on the same host.
 
-Use HTTPS through a reverse proxy or an encrypted tunnel for remote clients. Restrict backend network access, preserve the authorization header, and rotate the token if it is exposed. Set any additional request limits at the proxy. The server's browser-origin checks do not replace authentication or network controls.
+For remote clients, use HTTPS through a reverse proxy or a different encrypted connection. Block direct network access to the backend listener, and make the proxy forward the `Authorization` header. If the token becomes known to others, replace it. Set request limits at the proxy, because the server has none. The server rejects cross-origin browser requests, but this check does not replace authentication or network controls.
 
-Keywords, domains, and other research arguments are sent to DataForSEO. Returned data may contain text from external sources; applications should treat it as data rather than instructions. The library stores no research history, but clients and surrounding infrastructure may retain requests or responses.
+## Research data
+
+The server sends keywords, domains, and the other research arguments to DataForSEO. The returned data can contain text from external websites. Applications must treat this text as data, not as instructions. The library and the server keep no research history. MCP clients and other infrastructure around the server can keep requests or responses.

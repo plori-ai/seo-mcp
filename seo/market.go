@@ -65,3 +65,14 @@ func (c *Client) resolveMarket(locationCode int, languageCode string) (Market, e
 	}
 	return Market{LocationCode: locationCode, LanguageCode: languageCode}, nil
 }
+
+// Validate reports whether DataForSEO serves m: a supported country location
+// code and a language served there. Both fields are required. Use it to check
+// a market before passing it to WithDefaultMarket; the error is an *InputError.
+func (m Market) Validate() error {
+	if m.LocationCode == 0 || m.LanguageCode == "" {
+		return inputErrorf("a market needs both a location code and a language code")
+	}
+	_, err := (&Client{market: m}).resolveMarket(m.LocationCode, m.LanguageCode)
+	return err
+}
