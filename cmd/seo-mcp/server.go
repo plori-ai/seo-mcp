@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/plori-ai/seo-mcp/dataforseo"
@@ -40,6 +42,20 @@ func newServer(set *toolset.Set) *mcp.Server {
 }
 
 func toolError(err error) *mcp.CallToolResult {
+	message := errorMessage(err)
+	var task *seo.TaskError
+	if errors.As(err, &task) {
+		// The task is paid for; without its ID the caller can only post and
+		// pay for a new one.
+		message += fmt.Sprintf(" DataForSEO created the task before the failure. Call this tool again with taskId %q to collect it at no extra charge.", task.TaskID)
+	}
+	return &mcp.CallToolResult{
+		IsError: true,
+		Content: []mcp.Content{&mcp.TextContent{Text: message}},
+	}
+}
+
+func errorMessage(err error) string {
 	message := "SEO research failed."
 	var input *seo.InputError
 	var provider *dataforseo.Error
@@ -52,6 +68,10 @@ func toolError(err error) *mcp.CallToolResult {
 			message = "DataForSEO authentication failed. Check the server credentials."
 		case provider.RateLimited():
 			message = "DataForSEO rate limited this request. Try again later."
+		case provider.HTTPStatus >= 500 && strings.HasSuffix(provider.Path, "/task_post"):
+			// The transport does not replay a task_post, because DataForSEO
+			// may have created and billed the task before the error.
+			message = "DataForSEO failed while it created the task. It may have created and billed the task anyway. Wait a few minutes before you try again, because a new call creates a new billed task."
 		case provider.Upstream():
 			message = "DataForSEO upstream service failed. Try again later."
 		case provider.HTTPStatus == 0 && provider.Message != "":
@@ -67,8 +87,5 @@ func toolError(err error) *mcp.CallToolResult {
 	case errors.Is(err, context.DeadlineExceeded):
 		message = "SEO research timed out."
 	}
-	return &mcp.CallToolResult{
-		IsError: true,
-		Content: []mcp.Content{&mcp.TextContent{Text: message}},
-	}
+	return message
 }

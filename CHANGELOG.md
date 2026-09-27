@@ -6,6 +6,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Ver
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-27
+
+### Added
+
+- Two MCP tools that use DataForSEO task queues, ported from OpenSEO with the same tool names, argument names, and result field names:
+  - `get_business_reviews`: the Google reviews of one business, from `/v3/business_data/google/reviews/task_post` and `task_get`. With `includeOtherSources`, it uses the `extended_reviews` endpoints and also collects reviews from other sites.
+  - `get_business_updates`: the Google Business posts of one business, from `/v3/business_data/google/my_business_updates/task_post` and `task_get`.
+- Each call posts a high-priority task and waits up to 20 seconds for it. If the task is still running, the result has `status: "processing"` and a `taskId`. A call with only `taskId` collects the task and posts no new task. [docs/async-tasks.md](docs/async-tasks.md) explains the design.
+- `seo.Client.BusinessReviews`, `seo.Client.BusinessUpdates`, their request and result types, `seo.WithTaskPolling`, and `seo.TaskError`, which carries the task ID of a failure after DataForSEO created a task.
+
+### Changed
+
+- `dataforseo.Client.PostTask` no longer retries an HTTP 5xx response. DataForSEO charges when it creates a task, and a 5xx response does not prove that it did not create one. `PostTask` also returns an error when the created task has no ID.
+- The MCP error for an HTTP 5xx response to a task_post request says that DataForSEO may have billed the task. The error for a failure after DataForSEO created a task contains the `taskId`.
+
 ## [0.2.0] - 2026-09-27
 
 ### Added
@@ -35,6 +50,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Ver
 - Tests with synthetic DataForSEO responses, MCP transport tests, and library examples.
 - CI on Go 1.25 and Go 1.26, and GoReleaser archives for Linux, macOS, and Windows with SHA-256 checksums.
 
-[Unreleased]: https://github.com/plori-ai/seo-mcp/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/plori-ai/seo-mcp/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/plori-ai/seo-mcp/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/plori-ai/seo-mcp/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/plori-ai/seo-mcp/releases/tag/v0.1.0

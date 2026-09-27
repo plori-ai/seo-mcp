@@ -1,12 +1,12 @@
 # seo-mcp
 
-`seo-mcp` is a Go library and a [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server for SEO research with the [DataForSEO](https://dataforseo.com/) API. The server includes thirteen tools. Seven tools do keyword, domain, competitor, and backlink research. Six tools return local business data and local Google Maps results. The research logic, the tool names, and the JSON field names come from [OpenSEO](https://github.com/every-app/open-seo).
+`seo-mcp` is a Go library and a [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server for SEO research with the [DataForSEO](https://dataforseo.com/) API. The server includes fifteen tools. Seven tools do keyword, domain, competitor, and backlink research. Eight tools return local business data and local Google Maps results. The research logic, the tool names, and the JSON field names come from [OpenSEO](https://github.com/every-app/open-seo).
 
 ## What seo-mcp does and does not do
 
 `seo-mcp` does stateless research. A tool call sends one or more requests to DataForSEO and returns the result. If you send the same call again, the server does the research again. The project has no storage, no cache, no projects, no rank-tracking schedules, no billing system, and no UI.
 
-`seo-mcp` uses only DataForSEO endpoints that return the result in the same request. It does not use the asynchronous DataForSEO endpoints, which return a task ID that the caller must check again later. For example, Google reviews and Google Business updates are not available.
+Two tools, `get_business_reviews` and `get_business_updates`, use DataForSEO task queues, because DataForSEO has no live endpoint for this data. These tools post a task, wait up to 20 seconds for the result, and return a task ID if the task is still running. A later call with that task ID collects the result at no extra charge. The server does not store task IDs. See [Queued tasks](#queued-tasks). All other tools use DataForSEO endpoints that return the result in the same request.
 
 You bring your own DataForSEO account. DataForSEO bills each tool call to that account, and one tool call can make several paid requests. A call that fails input validation does not send a request to DataForSEO. [Requests and costs](#requests-and-costs) shows the number of requests for each tool.
 
@@ -36,6 +36,8 @@ The endpoint paths are relative to `https://api.dataforseo.com`. All endpoints u
 | `list_business_categories` | Google Business category names and the number of businesses in each, in descending order of that number. If the call sets `query`, the result has only the names that contain it. The match ignores case. | `GET /v3/business_data/business_listings/categories`. The tool requests the full list in each call and filters it locally. |
 | `get_business_profile` | All DataForSEO fields of one Google Business Profile, or `profile: null` if no business matches. | `/v3/business_data/google/my_business_info/live` |
 | `get_google_business_questions` | The answered and unanswered questions of one business. A question has its text, author, and time, and an `items` list of answers with the same fields. `items` is `null` if DataForSEO returns no answer list. | `/v3/business_data/google/questions_and_answers/live` |
+| `get_business_reviews` | The Google reviews of one business. A review has the rank, the time, the rating, the text and its original language, the author and the author's review and photo counts, the review highlights, the source site, and the owner's reply. `totals` has the business title, the total review count, the rating, the CID, and the place ID. If the task is still running, the result has only `status: "processing"` and `taskId`. | `/v3/business_data/google/reviews/task_post`, then `GET /v3/business_data/google/reviews/task_get/{id}`. With `includeOtherSources`: the same two endpoints under `extended_reviews`. |
+| `get_business_updates` | The posts (updates, offers, and events) of one Google Business Profile. A post has the rank, the author, the date, the text or snippet, the URL, and the links. If the task is still running, the result has only `status: "processing"` and `taskId`. | `/v3/business_data/google/my_business_updates/task_post`, then `GET /v3/business_data/google/my_business_updates/task_get/{id}` |
 | `get_local_serp_results` | One Google Maps or Local Finder result list near a coordinate. A row has the rank, the business name, CID, and place ID, the rating, the categories, the contact data, the opening hours, and the coordinates. | `searchType` `maps` (default): `/v3/serp/google/maps/live/advanced`. `searchType` `local_finder`: `/v3/serp/google/local_finder/live/advanced`. |
 | `get_local_rank_grid` | The Google Maps rank of one business at each point of a square grid around a center coordinate. A point has the rank, the result count, and the first result. The rank is `null` if the business is not in the first 20 results. The result also has a summary and the matched business. The summary counts the points searched, the points found, and the points in the top 3 and the top 10. It also has the average rank. The points are in rows from north to south. | `/v3/serp/google/maps/live/advanced`, one request for each grid point, with a depth of 20 results |
 
@@ -50,6 +52,8 @@ The endpoint paths are relative to `https://api.dataforseo.com`. All endpoints u
 - `list_business_categories`: `limit` from 1 to 200 (default 50).
 - `get_business_profile`: exactly one of `businessName`, `cid`, or `placeId`. `near` is optional. `near.radiusKm` is from 0.2 to 199 (default 10). If the call sets `near`, the tool ignores `locationCode`.
 - `get_google_business_questions`: exactly one of `businessName`, `cid`, or `placeId`, and `near`. `near.radiusKm` is from 1 to 100000, but the request to DataForSEO uses a maximum radius of 199,999 meters. `depth` from 1 to 100 (default 20).
+- `get_business_reviews`: exactly one of `businessName`, `cid`, or `placeId`, or only `taskId`. `near` and `locationCode` work as in `get_business_profile`. `depth` from 10 to 200 (default 20). `sortBy` is `newest` (default), `highest_rating`, `lowest_rating`, or `relevant`. If `includeOtherSources` is `true`, the tool also collects reviews from other sites, and it ignores `sortBy`.
+- `get_business_updates`: exactly one of `businessName`, `cid`, or `placeId`, or only `taskId`. `near` and `locationCode` work as in `get_business_profile`. `depth` from 10 to 100 (default 10).
 - `get_local_serp_results`: `keyword` from 1 to 120 characters. `depth` from 1 to 100 (default 20). `near.zoom` from 4 to 18. `device` is `mobile` (default) or `desktop`.
 - `get_local_rank_grid`: `target` has one or more of `cid`, `placeId`, and `name`. A row matches if its CID or place ID is equal to the given value, or if its title contains `name`. The name match ignores case. The first row that matches gives the rank. `gridSize` is 3 (default) or 5. `spacingKm` is from 0.25 to 10 (default 2). If the call does not set `zoom`, the tool calculates one zoom level for all points from `spacingKm` and the center latitude.
 
@@ -57,7 +61,7 @@ The MCP `tools/list` response and `toolset.Tools()` give the complete argument s
 
 ### Empty results and failed points
 
-If DataForSEO reports no search results, `search_local_businesses`, `get_google_business_questions`, and `get_local_serp_results` return an empty list. `get_business_profile` returns `profile: null`.
+If DataForSEO reports no search results, `search_local_businesses`, `get_google_business_questions`, and `get_local_serp_results` return an empty list. `get_business_profile` returns `profile: null`. `get_business_reviews` returns `reviews: []` and `totals: null`, and `get_business_updates` returns `updates: []`.
 
 In `get_local_rank_grid`, a point with a failed request has `error: true` and `rank: null`. If all points fail, the tool returns the last error. An HTTP 401 response from DataForSEO stops the grid, and the tool returns an error. A cancelled call also returns an error. In these two cases, the tool returns no points, but DataForSEO can bill the requests that it received.
 
@@ -74,6 +78,9 @@ DataForSEO sets the price of each request. For the current prices, see [DataForS
 - `get_google_business_questions`: one request. DataForSEO charges for each block of 20 returned questions, so a larger `depth` can cost more.
 - `get_local_serp_results`: one request. A Google Maps request has one price for up to 100 results. A Local Finder request has a price for each 10 mobile results or 20 desktop results, so a larger `depth` can increase its price.
 - `get_local_rank_grid`: one Google Maps request for each grid point. That is 9 requests for `gridSize` 3, and 25 requests for `gridSize` 5. The tool sends a maximum of three requests at the same time. DataForSEO can bill a point that fails.
+- `get_business_reviews`: one high-priority task. High priority costs two times the normal price. DataForSEO charges for each block of 10 returned reviews, so a larger `depth` costs more: at the time of writing, about $0.003 for the default 20 reviews and $0.03 for 200. With `includeOtherSources`, DataForSEO charges for each block of 20 reviews, and its task_post documentation lists three times the standard rate for a task with `businessName` and two times for a task with `cid` or `placeId`.
+- `get_business_updates`: one high-priority task. DataForSEO charges for the task and for each block of 10 returned posts: at the time of writing, about $0.0045 for the default 10 posts.
+- The task_get requests that collect a result are free. A call with `taskId` costs nothing. A call without `taskId` always creates and pays for a new task, also when an earlier call for the same business is still running.
 
 ### Markets
 
@@ -81,7 +88,20 @@ The default market is the United States (`locationCode` 2840, `languageCode` `"e
 
 In a Google Ads market, the keyword tools return search volume, CPC, and trends. Keyword difficulty is `null`. Intent is `"unknown"` in `research_keywords` and `null` in `get_keyword_metrics`. `get_ranked_keywords`, `get_domain_overview`, and `find_serp_competitors` need a Labs market. In a Google Ads market they return an input error. The `market.country` argument of `find_serp_competitors` is an older selector, and it accepts only the United States.
 
-The two backlinks tools and `list_business_categories` do not use a market. The other local tools use a coordinate, not a location code. `get_business_profile` uses `locationCode` if the call does not set `near`. The tool sends this code to DataForSEO without a check, so it also accepts city location codes. In `get_business_profile`, `get_google_business_questions`, `get_local_serp_results`, and `get_local_rank_grid`, `languageCode` can be any language that DataForSEO supports. The default is the language of the default market.
+The two backlinks tools and `list_business_categories` do not use a market. `get_business_profile`, `get_business_reviews`, and `get_business_updates` use `locationCode` if the call does not set `near`. These tools send this code to DataForSEO without a check, so they also accept city location codes. The other local tools use a coordinate, not a location code. In `get_business_profile`, `get_google_business_questions`, `get_business_reviews`, `get_business_updates`, `get_local_serp_results`, and `get_local_rank_grid`, `languageCode` can be any language that DataForSEO supports. The default is the language of the default market.
+
+### Queued tasks
+
+`get_business_reviews` and `get_business_updates` work in this sequence:
+
+1. The tool posts one DataForSEO task at high priority. DataForSEO charges for the task at this step.
+2. The tool checks the task every 4 seconds for up to 20 seconds.
+3. If the task is complete, the tool returns `status: "completed"`, the `taskId`, and the rows.
+4. If the task is still running, the tool returns only `status: "processing"` and `taskId`. Call the tool again after 30 to 60 seconds with only `taskId`. That call posts no task and costs nothing. It checks the task at once and then for up to 20 seconds again.
+
+DataForSEO keeps a task result for 30 days. A reviews task ID has the form `google:<id>` or `extended:<id>`, and an updates task ID is the bare DataForSEO ID. Pass it back to the same tool without changes.
+
+The server never sends a task_post request again. If DataForSEO returns an HTTP 5xx response to a task_post request, it can have created and billed the task, so the tool returns an error. If a failure occurs after DataForSEO created the task, for example a cancelled call or a failed task_get request, the error text contains the `taskId` to collect the task. [docs/async-tasks.md](docs/async-tasks.md) explains the design.
 
 ### Scopes
 
@@ -201,8 +221,8 @@ The module has three library packages. No library package imports an MCP SDK.
 
 | Package | Use it when |
 | --- | --- |
-| [`dataforseo`](https://pkg.go.dev/github.com/plori-ai/seo-mcp/dataforseo) | You need the DataForSEO transport directly: Basic authentication, task envelopes, bounded retries, and classified errors. `Post`, `PostTask`, and `Get` return a task. `FirstResult` decodes the first result of a task. |
-| [`seo`](https://pkg.go.dev/github.com/plori-ai/seo-mcp/seo) | You want typed Go requests and results for the thirteen research operations, with market selection and result shaping. |
+| [`dataforseo`](https://pkg.go.dev/github.com/plori-ai/seo-mcp/dataforseo) | You need the DataForSEO transport directly: Basic authentication, task envelopes, bounded retries, and classified errors. `Post`, `PostTask`, and `Get` return a task. `PostTask` never retries. `FirstResult` decodes the first result of a task. |
+| [`seo`](https://pkg.go.dev/github.com/plori-ai/seo-mcp/seo) | You want typed Go requests and results for the fifteen research operations, with market selection and result shaping. |
 | [`toolset`](https://pkg.go.dev/github.com/plori-ai/seo-mcp/toolset) | Your application calls tools by name with JSON arguments. `Tools()` returns the tool descriptions and input schemas. `Set.Call` runs a tool through `seo`. |
 
 Typed keyword metrics:
@@ -261,12 +281,13 @@ Check `err` before you use the result. Use `errors.As` to examine an error:
 - Invalid input returns a `*seo.InputError`. Its message tells the caller what to change.
 - A DataForSEO failure returns an error that wraps a `*dataforseo.Error`.
 - `Set.Call` with an unknown tool name returns an error that wraps `toolset.ErrUnknownTool`.
+- A failure after DataForSEO created a queued task returns a `*seo.TaskError`. Its `TaskID` collects the task in a later call. It wraps the cause, so `errors.Is` and `errors.As` also find the context error or the `*dataforseo.Error`.
 
-`research_keywords` can return a mix of successful and failed seeds. Check the `ok` field of each seed result. By default, each HTTP request to DataForSEO has a 60-second timeout. `dataforseo.Client.HTTPClient` overrides it. To limit the time of a complete call, set a deadline on the context. The transport retries an HTTP 5xx response up to two times. It does not retry an HTTP 4xx response or a failed task status.
+`research_keywords` can return a mix of successful and failed seeds. Check the `ok` field of each seed result. By default, each HTTP request to DataForSEO has a 60-second timeout. `dataforseo.Client.HTTPClient` overrides it. To limit the time of a complete call, set a deadline on the context. The transport retries an HTTP 5xx response up to two times, except for a task_post request, which it never sends again. It does not retry an HTTP 4xx response or a failed task status. `seo.WithTaskPolling` sets how long `BusinessReviews` and `BusinessUpdates` wait for a queued task. A wait of zero returns the task ID of a new task at once.
 
 ## OpenSEO compatibility
 
-The thirteen tool names, the argument names, and the result field names are the same as in OpenSEO. For example, `get_keyword_metrics` returns `search_volume` and `research_keywords` returns `searchVolume`, as in OpenSEO. Nullable metrics and nested DataForSEO rows keep their JSON types.
+The fifteen tool names, the argument names, and the result field names are the same as in OpenSEO. For example, `get_keyword_metrics` returns `search_volume` and `research_keywords` returns `searchVolume`, as in OpenSEO. Nullable metrics and nested DataForSEO rows keep their JSON types.
 
 These differences are intentional:
 
@@ -274,10 +295,11 @@ These differences are intentional:
 - Credentials and the default market come from the server configuration or from the library caller. There is no project lookup.
 - There is no OpenSEO credit accounting and no cached research. Each call uses your DataForSEO account directly.
 - A successful MCP result has the result JSON in `structuredContent` and the same JSON as text in a text content block. OpenSEO returns Markdown tables in the text block.
-- The tool annotations mark each tool as read-only and open-world. Read-only does not mean free: most calls spend DataForSEO balance.
+- The tool annotations mark each tool as read-only and open-world. Read-only does not mean free: most calls spend DataForSEO balance. OpenSEO marks `get_business_reviews` and `get_business_updates` as not read-only, because they create a task. In `seo-mcp` they are read-only like the other tools, because a task changes no data that the caller can see. Like the other tools, they spend DataForSEO balance.
+- `get_business_reviews` and `get_business_updates` wait up to 20 seconds, as in OpenSEO, but check the task first 4 seconds after the post. OpenSEO also checks it at once.
 - A tool error contains one of these: an input correction, a short error message, or the task status message from DataForSEO. Failed authentication and rate limits return a short error message. A tool error never contains a raw HTTP response body.
 
-`seo-mcp` has only these thirteen tools. It does not port the other OpenSEO features, such as projects and scheduled rank tracking. It also does not port `get_business_reviews` and `get_business_updates`, because they use asynchronous DataForSEO tasks.
+`seo-mcp` has only these fifteen tools. It does not port the other OpenSEO features, such as projects and scheduled rank tracking.
 
 ## HTTP mode
 

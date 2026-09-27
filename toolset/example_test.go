@@ -51,6 +51,8 @@ func ExampleTools() {
 	// list_business_categories List business categories
 	// get_business_profile Get business profile
 	// get_google_business_questions Get Google business questions
+	// get_business_reviews Get business reviews
+	// get_business_updates Get business updates
 	// get_local_serp_results Get local SERP results
 	// get_local_rank_grid Get local rank grid
 }
