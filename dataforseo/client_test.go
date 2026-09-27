@@ -318,6 +318,43 @@ func TestClientPostTaskAndGet(t *testing.T) {
 	}
 }
 
+func TestClientPostTaskDoesNotRetry5xx(t *testing.T) {
+	for _, status := range []int{500, 502, 503, 504} {
+		t.Run(fmt.Sprint(status), func(t *testing.T) {
+			var calls atomic.Int32
+			fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+				calls.Add(1)
+				http.Error(w, "temporary upstream error", status)
+			}))
+			defer fake.Close()
+			client := dataforseo.New("synthetic-api-key")
+			client.BaseURL = fake.URL
+			_, err := client.PostTask(t.Context(), "/v3/sample/task_post", map[string]string{"keyword": "sample"})
+			var provider *dataforseo.Error
+			if !errors.As(err, &provider) || provider.HTTPStatus != status || !provider.Upstream() {
+				t.Fatalf("error = %v, want upstream HTTP %d", err, status)
+			}
+			if got := calls.Load(); got != 1 {
+				t.Errorf("task_post requests = %d, want 1: a replay can pay for a second task", got)
+			}
+		})
+	}
+}
+
+func TestClientPostTaskRequiresID(t *testing.T) {
+	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = io.WriteString(w, `{"status_code":20000,"tasks":[{"status_code":20100,"cost":0.01}]}`)
+	}))
+	defer fake.Close()
+	client := dataforseo.New("synthetic-api-key")
+	client.BaseURL = fake.URL
+	_, err := client.PostTask(t.Context(), "/v3/sample/task_post", map[string]string{})
+	var provider *dataforseo.Error
+	if !errors.As(err, &provider) || provider.Cost != 0.01 || !strings.Contains(provider.Message, "no id") {
+		t.Fatalf("error = %v, want a missing-id error that keeps the cost", err)
+	}
+}
+
 func TestClientRejectsMalformedResponse(t *testing.T) {
 	fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, _ = io.WriteString(w, "not JSON")

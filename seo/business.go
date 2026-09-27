@@ -270,28 +270,8 @@ func (c *Client) BusinessProfile(ctx context.Context, req BusinessProfileRequest
 		return nil, err
 	}
 	task := map[string]any{"keyword": keyword, "language_code": language}
-	if req.Near == nil {
-		location := req.LocationCode
-		if location == 0 {
-			market, err := c.resolveMarket(0, "")
-			if err != nil {
-				return nil, err
-			}
-			location = market.LocationCode
-		}
-		task["location_code"] = location
-	} else {
-		if err := validateBusinessCoordinates(req.Near.Latitude, req.Near.Longitude); err != nil {
-			return nil, err
-		}
-		radius := 10.0
-		if req.Near.RadiusKM != nil {
-			radius = *req.Near.RadiusKM
-		}
-		if !businessNumberInRange(radius, 0.2, 199) {
-			return nil, inputErrorf("near.radiusKm must be between 0.2 and 199")
-		}
-		task["location_coordinate"] = businessDataCoordinate(*req.Near.Latitude, *req.Near.Longitude, radius)
+	if err := c.setBusinessDataLocation(task, req.Near, req.LocationCode); err != nil {
+		return nil, err
 	}
 	result := &BusinessProfileResult{}
 	t, err := c.api.Post(ctx, pathBusinessProfile, task)
@@ -415,6 +395,35 @@ func businessIdentifierKeyword(name, cid, placeID *string) (string, error) {
 		return "", inputErrorf("Provide exactly one business identifier: businessName, cid, or placeId.")
 	}
 	return keyword, nil
+}
+
+// setBusinessDataLocation sets the location of a Google business_data task:
+// a coordinate when near is set, otherwise locationCode or the default
+// market's location. These endpoints reject a task that has both.
+func (c *Client) setBusinessDataLocation(task map[string]any, near *BusinessProfileNear, locationCode int) error {
+	if near == nil {
+		if locationCode == 0 {
+			market, err := c.resolveMarket(0, "")
+			if err != nil {
+				return err
+			}
+			locationCode = market.LocationCode
+		}
+		task["location_code"] = locationCode
+		return nil
+	}
+	if err := validateBusinessCoordinates(near.Latitude, near.Longitude); err != nil {
+		return err
+	}
+	radius := 10.0
+	if near.RadiusKM != nil {
+		radius = *near.RadiusKM
+	}
+	if !businessNumberInRange(radius, 0.2, 199) {
+		return inputErrorf("near.radiusKm must be between 0.2 and 199")
+	}
+	task["location_coordinate"] = businessDataCoordinate(*near.Latitude, *near.Longitude, radius)
+	return nil
 }
 
 func (c *Client) businessLanguage(language string) (string, error) {

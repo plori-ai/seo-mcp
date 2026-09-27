@@ -39,6 +39,8 @@ var tools = []Tool{
 	listBusinessCategoriesTool,
 	businessProfileTool,
 	businessQuestionsTool,
+	businessReviewsTool,
+	businessUpdatesTool,
 	localSerpResultsTool,
 	localRankGridTool,
 }

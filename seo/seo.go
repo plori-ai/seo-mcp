@@ -1,6 +1,6 @@
 // Package seo runs SEO research on the DataForSEO API: keyword research,
-// keyword metrics, the keywords a site ranks for, a domain overview, and a
-// backlink overview.
+// keyword metrics, the keywords a site ranks for, domain and backlink data,
+// SERP competitors, and local business data and local search results.
 //
 // Each operation is a method on Client that takes a request struct and returns
 // a result struct. Both carry JSON tags, so a caller can decode tool arguments
@@ -14,6 +14,7 @@ package seo
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/plori-ai/seo-mcp/dataforseo"
 )
@@ -27,8 +28,10 @@ const (
 // Client runs research requests against one DataForSEO account. It is safe for
 // concurrent use.
 type Client struct {
-	api    *dataforseo.Client
-	market Market
+	api          *dataforseo.Client
+	market       Market
+	taskWait     time.Duration
+	taskInterval time.Duration
 }
 
 // Market is a DataForSEO location code and language code pair.
@@ -45,9 +48,31 @@ func WithDefaultMarket(m Market) Option {
 	return func(c *Client) { c.market = m }
 }
 
+// WithTaskPolling sets how the operations that use DataForSEO task queues
+// (BusinessReviews and BusinessUpdates) wait for a result. After a new task is
+// posted, the operation checks it every interval until wait has passed; a
+// call that collects an earlier task checks it at once and then at the same
+// times. When wait ends first, the result has status "processing" and a task
+// ID. The defaults are DefaultTaskWait and DefaultTaskPollInterval. A wait of
+// zero returns the task ID of a new task without a check. A negative wait
+// counts as zero, and an interval that is not positive uses the default.
+func WithTaskPolling(wait, interval time.Duration) Option {
+	return func(c *Client) {
+		c.taskWait = max(wait, 0)
+		if interval > 0 {
+			c.taskInterval = interval
+		}
+	}
+}
+
 // New returns a Client that sends requests through api.
 func New(api *dataforseo.Client, opts ...Option) *Client {
-	c := &Client{api: api, market: Market{LocationCode: DefaultLocationCode, LanguageCode: DefaultLanguageCode}}
+	c := &Client{
+		api:          api,
+		market:       Market{LocationCode: DefaultLocationCode, LanguageCode: DefaultLanguageCode},
+		taskWait:     DefaultTaskWait,
+		taskInterval: DefaultTaskPollInterval,
+	}
 	for _, opt := range opts {
 		opt(c)
 	}

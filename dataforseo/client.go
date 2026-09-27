@@ -175,27 +175,40 @@ func (c *Client) Post(ctx context.Context, path string, task any) (*Task, error)
 	if err != nil {
 		return nil, fmt.Errorf("dataforseo: encode task: %w", err)
 	}
-	return c.do(ctx, http.MethodPost, path, body, StatusOK)
+	return c.do(ctx, http.MethodPost, path, body, StatusOK, maxServerRetries)
 }
 
 // PostTask sends one task to an asynchronous task_post endpoint. The returned
 // task's ID is what the matching task_get endpoint takes.
+//
+// PostTask never retries. DataForSEO charges when it creates the task, and an
+// HTTP 5xx or a lost connection does not prove that it did not create one, so
+// a replay could pay for the same task twice. The caller decides whether to
+// post again.
 func (c *Client) PostTask(ctx context.Context, path string, task any) (*Task, error) {
 	body, err := json.Marshal([]any{task})
 	if err != nil {
 		return nil, fmt.Errorf("dataforseo: encode task: %w", err)
 	}
-	return c.do(ctx, http.MethodPost, path, body, StatusTaskSent)
+	t, err := c.do(ctx, http.MethodPost, path, body, StatusTaskSent, 0)
+	if err != nil {
+		return nil, err
+	}
+	if t.ID == "" {
+		return nil, &Error{StatusCode: t.StatusCode, Message: "created task has no id", Path: path, Cost: t.Cost}
+	}
+	return t, nil
 }
 
 // Get calls a GET endpoint, such as a task_get endpoint, and returns its first
-// task after the envelope checks.
+// task after the envelope checks. GET requests are free and do not change
+// state, so Get retries HTTP 5xx responses like Post.
 func (c *Client) Get(ctx context.Context, path string) (*Task, error) {
-	return c.do(ctx, http.MethodGet, path, nil, StatusOK)
+	return c.do(ctx, http.MethodGet, path, nil, StatusOK, maxServerRetries)
 }
 
-func (c *Client) do(ctx context.Context, method, path string, body []byte, okTaskStatus int) (*Task, error) {
-	raw, err := c.send(ctx, method, path, body)
+func (c *Client) do(ctx context.Context, method, path string, body []byte, okTaskStatus, serverRetries int) (*Task, error) {
+	raw, err := c.send(ctx, method, path, body, serverRetries)
 	if err != nil {
 		return nil, err
 	}
@@ -229,8 +242,9 @@ func (c *Client) do(ctx context.Context, method, path string, body []byte, okTas
 	return task, nil
 }
 
-// send performs the HTTP exchange, retrying 5xx responses twice.
-func (c *Client) send(ctx context.Context, method, path string, body []byte) ([]byte, error) {
+// send performs the HTTP exchange and retries a 5xx response up to
+// serverRetries times.
+func (c *Client) send(ctx context.Context, method, path string, body []byte, serverRetries int) ([]byte, error) {
 	if c.APIKey == "" {
 		return nil, errors.New("dataforseo: API key is empty")
 	}
@@ -268,7 +282,7 @@ func (c *Client) send(ctx context.Context, method, path string, body []byte) ([]
 		if resp.StatusCode/100 == 2 {
 			return raw, nil
 		}
-		if resp.StatusCode >= 500 && attempt < maxServerRetries {
+		if resp.StatusCode >= 500 && attempt < serverRetries {
 			select {
 			case <-ctx.Done():
 				return nil, ctx.Err()

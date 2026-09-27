@@ -181,6 +181,10 @@ func TestToolError(t *testing.T) {
 		{"unexpected", errors.New("private details"), "SEO research failed."},
 		{"canceled", context.Canceled, "SEO research canceled."},
 		{"deadline", context.DeadlineExceeded, "SEO research timed out."},
+		{"task_post 5xx", &dataforseo.Error{HTTPStatus: 500, Message: "private body", Path: "/v3/business_data/google/reviews/task_post"}, "DataForSEO failed while it created the task. It may have created and billed the task anyway. Wait a few minutes before you try again, because a new call creates a new billed task."},
+		{"task_get 5xx", &dataforseo.Error{HTTPStatus: 503, Message: "private body", Path: "/v3/business_data/google/reviews/task_get/id"}, "DataForSEO upstream service failed. Try again later."},
+		{"canceled after the post", &seo.TaskError{TaskID: "google:abc-1", Err: fmt.Errorf("dataforseo: %w", context.Canceled)}, `SEO research canceled. DataForSEO created the task before the failure. Call this tool again with taskId "google:abc-1" to collect it at no extra charge.`},
+		{"task_get failure after the post", &seo.TaskError{TaskID: "abc-1", Err: &dataforseo.Error{HTTPStatus: 502, Message: "private body"}}, `DataForSEO upstream service failed. Try again later. DataForSEO created the task before the failure. Call this tool again with taskId "abc-1" to collect it at no extra charge.`},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

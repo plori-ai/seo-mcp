@@ -33,7 +33,7 @@ Use the standard library when you can. If you add a dependency, explain why in t
 
 Use table-driven tests and small synthetic fixtures. In each test, check the DataForSEO endpoint and the task fields, and also the result JSON. Cover defaults, explicit market selection, invalid inputs, provider errors, empty results, and the fallback paths that apply. If a request waits or retries, test cancellation.
 
-Keep the thirteen OpenSEO tool names and their JSON argument and result names. Check omitted fields against `null`, empty arrays, nesting, and numeric types. Do not add `projectId` arguments or `meta` output. If you make an intentional compatibility change, explain it in the pull request and in the changelog.
+Keep the fifteen OpenSEO tool names and their JSON argument and result names. Check omitted fields against `null`, empty arrays, nesting, and numeric types. Do not add `projectId` arguments or `meta` output. If you make an intentional compatibility change, explain it in the pull request and in the changelog.
 
 Do not commit live provider responses, account credentials, or private hostnames. Make fixtures yourself from the documented DataForSEO response format. In examples, use reserved domains such as `example.com`.
 
